@@ -1,7 +1,24 @@
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 from games.models import Game, GameCategory, Player, PlayerScore
 from games.serializers import GameSerializer, GameCategorySerializer, PlayerSerializer, PlayerScoreSerializer
+
+
+class ApiRoot(generics.GenericAPIView):
+    """
+    This class is used for browsing APIs.
+    """
+    name = 'api-root'
+
+    def get(self, request, *args, **kwargs):
+        return Response({
+            'players': reverse(PlayerList.name, request=request),
+            'game-categories': reverse(GameCategoryList.name, request=request),
+            'games': reverse(GameList.name, request=request),
+            'scores': reverse(PlayerScoreList.name, request=request)
+        })
 
 
 class GameCategoryList(generics.ListCreateAPIView):
