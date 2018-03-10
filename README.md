@@ -17,3 +17,17 @@ REST_FRAMEWORK = {
 ```
 * pagination은 limit와 offset을 통해 조작할 수 있으며, DRF는 next와 previous라는 속성을 통해 다음/이전 페이지의 정보를 제공해준다.
 * request: /games/?limit=5&offset=5
+
+### Authentication
+DRF를 사용하면 Pagination과 같이 간단한 설정만으로 인증기능을 사용할 수 있음.
+settings.py에 글로벌 설정을 할 수 있고, 각 view마다 추가적으로 인증체계를 오버라이드 할 수도 있다.
+
+DRF는 아래의 3가지 인증 클래스를 기본으로 제공한다.
+* BasicAuthentication: 사용자의 이름과 암호에 대한 HTTP 기본 인증을 제공. 실제로 서비스에서 사용할 경우에는 HTTPS에서만 사용 가능해야한다.
+* SessionAuthentication: 인증을 위해 Django의 Session Framework와 함께 작동한다.
+* TokenAuthentication: 토큰 기반 인증을 제공한다. request의 Authorization HTTP 헤더에 Token 필드에 user의 token값이 지정되어 있어야한다.
+
+참고로 만약에 이 예제와 같이 2가지 이상의 인증 클래스를 설정한다면 첫번째로 지정된 인증 클래스는
+아래의 두가지 property들의 값을 사용하게 된다.
+* request.user: Django의 User 모델 인스턴스
+* request.auth: 인증 토큰과 같이 인증에 사용되는 추가적인 정보들
