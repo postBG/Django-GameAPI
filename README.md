@@ -71,4 +71,7 @@ DRF는 아래에서 서술할 3가지의 스로틀 클래스를 제공한다.
 
 * AnonRateThrottle: 익명 사용자의 요청 속도를 제한. request의 IP 주소를 캐시 키로 사용.
 * UserRateThrottle: 특정 사용자의 요청 속도를 제한. 인증된 사용자의 경우 ID가 캐시 키가 되며, 익명의 사용자의 경우 IP주소가 캐시 키가 된다.
-* ScopedRateThrottle: trottle_scope 속성에 할당된 값으로 식별되는 API의 특정 부분에 대한 요청 비율을 제한. 주로 API의 특정 부분에 대한 접근을 다른 비율로 제한할 경우에 유용.
+* ScopedRateThrottle: trottle_scope 속성에 할당된 값으로 식별되는 API의 특정 부분에 대한 요청 비율을 제한. 주로 API의 특정 부분에 대한 접근을 다른 비율로 제한할 경우(즉, 다른 스로틀 설정을 override할 때)에 유용.
+
+각 View들은 자신의 본문을 실행하기 전 Throttle 정책에 대한 검토를 먼저 시행한다. 
+만일 Throttle 될 경우, Throttled exception이 발생한다.
