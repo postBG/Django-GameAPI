@@ -1,6 +1,14 @@
 # Django-GameAPI
 Explore django-rest-framework
 
+## 구현되어 있는 기능 목록
+* 가능한 request들은 API root로 들어가서 보면 됨.
+* limit & offset 기반의 pagination (max_limit=10)
+* game의 owner만 game에 대한 write 권한을 주기
+* 인증되지 않은 사용자는 시간당 최대 5개의 요청만 허용하기
+* 인증된 사용자는 시간당 최대 20개의 요청만 허용하기
+* 인증여부와 상관없이 게임 카테고리 관련 뷰에는 시간당 100건의 요청만 허용하기
+
 ## Note
 ### HTTP PATCH
 * patch method는 자원의 특정 필드들만 변경할 수 있게 해주는 method.
@@ -37,3 +45,30 @@ DRF는 아래의 3가지 인증 클래스를 기본으로 제공한다.
 #### User Defined Object Level Permission
 새로운 Permission 객체를 생성할 때는 반드시 BasePermission을 상속받고 has_object_permission 메서드를
 오버라이드해야한다.
+
+### Throttling
+글로벌 설정은 아래와 같이 한다.
+```python
+{
+    # ...
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ),
+    'DEFAULT_THROTTLE_RATES': {
+        # period can be one of sec, min, hour, day  
+        'anon': '5/hour',
+        'user': '20/hour',
+        'game-categories': '30/hour'
+    }
+    # ...
+}
+
+```
+
+DRF는 아래에서 서술할 3가지의 스로틀 클래스를 제공한다. 
+이 클래스들은 모두 BaseThrottle과 SimpleRateThrottle 클래스의 서브클래스이다.
+
+* AnonRateThrottle: 익명 사용자의 요청 속도를 제한. request의 IP 주소를 캐시 키로 사용.
+* UserRateThrottle: 특정 사용자의 요청 속도를 제한. 인증된 사용자의 경우 ID가 캐시 키가 되며, 익명의 사용자의 경우 IP주소가 캐시 키가 된다.
+* ScopedRateThrottle: trottle_scope 속성에 할당된 값으로 식별되는 API의 특정 부분에 대한 요청 비율을 제한. 주로 API의 특정 부분에 대한 접근을 다른 비율로 제한할 경우에 유용.
