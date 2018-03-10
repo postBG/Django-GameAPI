@@ -19,6 +19,8 @@ REST_FRAMEWORK = {
 * request: /games/?limit=5&offset=5
 
 ### Authentication
+
+#### Basic
 DRF를 사용하면 Pagination과 같이 간단한 설정만으로 인증기능을 사용할 수 있음.
 settings.py에 글로벌 설정을 할 수 있고, 각 view마다 추가적으로 인증체계를 오버라이드 할 수도 있다.
 
@@ -31,3 +33,7 @@ DRF는 아래의 3가지 인증 클래스를 기본으로 제공한다.
 아래의 두가지 property들의 값을 사용하게 된다.
 * request.user: Django의 User 모델 인스턴스
 * request.auth: 인증 토큰과 같이 인증에 사용되는 추가적인 정보들
+
+#### User Defined Object Level Permission
+새로운 Permission 객체를 생성할 때는 반드시 BasePermission을 상속받고 has_object_permission 메서드를
+오버라이드해야한다.
