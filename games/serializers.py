@@ -1,17 +1,36 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from games.models import Game, GameCategory, PlayerScore, Player
+
+
+class UserGameSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Game
+        fields = ('url', 'name')
+
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    games = GameSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('url', 'pk', 'username', 'games')
 
 
 class GameSerializer(serializers.HyperlinkedModelSerializer):
     """
     slug_field is set to name which means related GameCategory's name will be rendered.
     queryset is used to search related game_category object.
+    
+    We want to print just username of owner.
     """
+    owner = serializers.ReadOnlyField(source='owner.username')
     game_category = serializers.SlugRelatedField(queryset=GameCategory.objects.all(), slug_field='name')
 
     class Meta:
         model = Game
-        fields = ('url', 'game_category', 'name', 'release_date', 'played')
+        depth = 4
+        fields = ('url', 'owner', 'game_category', 'name', 'release_date', 'played')
 
 
 class GameCategorySerializer(serializers.HyperlinkedModelSerializer):
