@@ -3,20 +3,6 @@ from rest_framework import serializers
 from games.models import Game, GameCategory, PlayerScore, Player
 
 
-class UserGameSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Game
-        fields = ('url', 'name')
-
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    games = GameSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = User
-        fields = ('url', 'pk', 'username', 'games')
-
-
 class GameSerializer(serializers.HyperlinkedModelSerializer):
     """
     slug_field is set to name which means related GameCategory's name will be rendered.
@@ -81,3 +67,17 @@ class PlayerScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlayerScore
         fields = ('url', 'pk', 'score', 'score_date', 'player', 'game')
+
+
+class UserGameSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Game
+        fields = ('url', 'name')
+
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    games = GameSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ('url', 'pk', 'username', 'games')
