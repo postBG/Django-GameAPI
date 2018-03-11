@@ -100,3 +100,9 @@ django-filter를 설치해주면, DRF는 filtering도 간단하다.
 
 참고로, 제너릭 뷰의 filter_backends 속성에 위의 필터를 지정하면 클래스마다 filter를 다르게 적용할 수도 있다.
 
+### UnitTest
+```bash
+python manage.py test -v 2
+converage report -m
+coverage html
+```
