@@ -75,3 +75,28 @@ DRF는 아래에서 서술할 3가지의 스로틀 클래스를 제공한다.
 
 각 View들은 자신의 본문을 실행하기 전 Throttle 정책에 대한 검토를 먼저 시행한다. 
 만일 Throttle 될 경우, Throttled exception이 발생한다.
+
+### Filter
+django-filter를 설치해주면, DRF는 filtering도 간단하다.
+기본으로 사용할 글로벌 설정은 다음과 같이 해주면 된다.
+```python
+{
+    # ...
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.DjangoFilterBacked',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter'
+    ),
+    # ...
+}
+```
+
+우리가 이 예제에서 사용할 Filter에 대해 간단히 소개하자면 다음과 같다.
+* DjangoFilterBacked: 필드 필터링 기능을 제공. 필터링할 수 있는 필드 세트를 지정하거나, 사용자가 정의한 FilterSet을 통해 뷰와 연결할 수 있다.
+* SearchFilter: 단일 쿼리 매개 변수 기반 검색 기능을 제공하며 장고 admin의 검색 함수에 기반을 둔다.
+검색에 포함할 필드를 지정할 수 있고, 클라이언트는 단일 쿼리로 이 필드를 섬색하는 쿼리를 만들어 항목을 필터링 할 수 있다.
+요청에서 단일 쿼리로 여러 필드를 검색할 경우 유용하다.
+* OrderingFilter: 검색 결과를 정렬하는 방법을 제어.
+
+참고로, 제너릭 뷰의 filter_backends 속성에 위의 필터를 지정하면 클래스마다 filter를 다르게 적용할 수도 있다.
+

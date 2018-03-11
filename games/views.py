@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.throttling import ScopedRateThrottle
 
+from games.filters import PlayerScoreFilter
 from games.models import Game, GameCategory, Player, PlayerScore
 from games.permissions import IsOwnerOrReadOnly
 from games.serializers import GameSerializer, GameCategorySerializer, PlayerSerializer, PlayerScoreSerializer, \
@@ -32,6 +33,9 @@ class GameCategoryList(generics.ListCreateAPIView):
     name = 'gamecategory-list'
     throttle_scope = 'game-categories'
     throttle_classes = (ScopedRateThrottle,)
+    filter_fields = ('name',)
+    search_fields = ('^name',)  # '^' means that we want to limit search results to match from first character.
+    ordering_fields = ('name',)
 
 
 class GameCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -47,6 +51,9 @@ class GameList(generics.ListCreateAPIView):
     serializer_class = GameSerializer
     name = 'game-list'
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+    filter_fields = ('name', 'game_category', 'release_date', 'played', 'owner')
+    search_fields = ('^name',)
+    ordering_fields = ('name', 'release_date')
 
     def perform_create(self, serializer):
         """
@@ -70,6 +77,9 @@ class PlayerList(generics.ListCreateAPIView):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
     name = 'player-list'
+    filter_fields = ('name', 'gender')
+    search_fields = ('^name',)
+    ordering_fields = ('name',)
 
 
 class PlayerDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -82,6 +92,8 @@ class PlayerScoreList(generics.ListCreateAPIView):
     queryset = PlayerScore.objects.all()
     serializer_class = PlayerScoreSerializer
     name = 'playerscore-list'
+    filter_class = PlayerScoreFilter
+    ordering_fields = ('score', 'score_date')
 
 
 class PlayerScoreDetail(generics.RetrieveUpdateDestroyAPIView):
