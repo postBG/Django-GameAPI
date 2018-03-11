@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'crispy_forms',
+    'django_nose',
     'games.apps.GamesConfig',
 ]
 
@@ -145,3 +146,14 @@ REST_FRAMEWORK = {
         'game-categories': '30/min'
     }
 }
+
+# Execute all tests using nose
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# nose will measure coverage of game app
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-erase',
+    '--cover-inclusive',
+    '--cover-package=games'
+]
