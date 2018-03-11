@@ -36,8 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
+    'crispy_forms',
     'games.apps.GamesConfig',
-    'crispy_forms'
 ]
 
 MIDDLEWARE = [
