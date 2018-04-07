@@ -1,5 +1,6 @@
 # Django-GameAPI
 Explore django-rest-framework
+python version: 3.6.x
 
 ## 구현되어 있는 기능 목록
 * 가능한 request들은 API root로 들어가서 보면 됨.
